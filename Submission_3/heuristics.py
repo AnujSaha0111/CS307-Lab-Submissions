@@ -1,12 +1,10 @@
 from utils import get_literal_value
-
 def h1(formula, assignment):
     uns = 0
     for clause in formula:
         if not any(get_literal_value(lit, assignment) for lit in clause):
             uns += 1
     return uns
-
 def h2(formula, assignment):
     score = 0.0
     for clause in formula:

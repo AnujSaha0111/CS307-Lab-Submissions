@@ -1,6 +1,5 @@
 import random
 from heuristics import h1
-
 def hill_climbing(formula, n, h_func, max_tries=100, max_flips=1000):
     steps = 0
     for t in range(max_tries):

@@ -14,18 +14,15 @@ def run_experiment(n, m_list, num_instances=5):
                 _, steps, solved = hill_climbing(formula, n, h)
                 N = steps * n
                 p = steps / N if N > 0 else 0
-                print(f"Instance {i}, {h_name}, Hill-Climbing: solved={solved}, steps={steps}, penetrance={p:.4f}")
-                
+                print(f"Instance {i}, {h_name}, Hill-Climbing: solved={solved}, steps={steps}, penetrance={p:.4f}")                
                 _, steps, solved = beam_search(formula, n, 3, h)
                 N = steps * 3 * n
                 p = steps / N if N > 0 else 0
                 print(f"Instance {i}, {h_name}, Beam-3: solved={solved}, steps={steps}, penetrance={p:.4f}")
-                
                 _, steps, solved = beam_search(formula, n, 4, h)
                 N = steps * 4 * n
                 p = steps / N if N > 0 else 0
                 print(f"Instance {i}, {h_name}, Beam-4: solved={solved}, steps={steps}, penetrance={p:.4f}")
-                
                 _, steps, solved = vnd(formula, n, h)
                 N = steps * (n**3 / 18)
                 p = steps / N if N > 0 else 0

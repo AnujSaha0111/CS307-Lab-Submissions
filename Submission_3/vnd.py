@@ -1,7 +1,6 @@
 import random
 from itertools import combinations
 from heuristics import h1
-
 def vnd(formula, n, h_func, max_tries=10):
     k_max = 3
     steps = 0
