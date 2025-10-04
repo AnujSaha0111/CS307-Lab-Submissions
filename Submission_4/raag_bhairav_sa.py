@@ -18,7 +18,7 @@ def energy(melody):
         score += d ** 2
     for i in range(len(melody) - 2):
         if melody[i] == melody[i + 1] == melody[i + 2]:
-            score += 20  # penalty increase
+            score += 20 
     if not has_pakad(melody):
         score += 10000
     return score

@@ -1,0 +1,3 @@
+Loaded image 512x512, using 4x4 grid, tile size 128x128
+Initial grid shape: (4, 4)
+Solved with energy: 189274.75 after 1200000 iterations
