@@ -1,46 +1,43 @@
-def run_test_case(name, doc1, doc2, expected_plagiarism_count):
-    from plagiarism_detection import plagiarism_detection_system
-    
-    total_cost, plag_pairs = plagiarism_detection_system(doc1, doc2)
-    
-    print(f"\n{'='*60}")
-    print(f"TEST CASE: {name}")
-    print(f"{'='*60}")
-    print(f"Total Alignment Cost: {total_cost}")
-    print(f"Plagiarism Pairs Found: {len(plag_pairs)}")
-    print(f"Expected: {expected_plagiarism_count}")
-    
-    status = "✓ PASSED" if len(plag_pairs) == expected_plagiarism_count else "✗ FAILED"
-    print(f"Status: {status}")
-    
-    for pair in plag_pairs:
-        print(f"  - Sentence {pair['sent1_index']}: {pair['similarity']:.3f}")
+import unittest
+from plagiarism_detector import detect_plagiarism
 
-def run_all_tests():
-    """Run all test cases."""
-    
-    # Test Case 1: Identical Documents
-    doc1_1 = "This is sentence one. This is sentence two. This is three."
-    doc2_1 = "This is sentence one. This is sentence two. This is three."
-    run_test_case("1. Identical Documents", doc1_1, doc2_1, 3)
-    
-    # Test Case 2: Slightly Modified
-    doc1_2 = "This is first sentence. Second sentence here. Third one."
-    doc2_2 = "This is first sentence. Second sentence changed. Third one."
-    run_test_case("2. Slightly Modified", doc1_2, doc2_2, 2)
-    
-    # Test Case 3: Completely Different
-    doc1_3 = "Cat dog bird. House car tree. Apple banana."
-    doc2_3 = "Red blue green. Mountain river sea. Book pen paper."
-    run_test_case("3. Completely Different", doc1_3, doc2_3, 0)
-    
-    # Test Case 4: Partial Overlap
-    doc1_4 = "First sentence. Second here. Third different. Fourth unique."
-    doc2_4 = "First sentence. Second here. Totally new. Another one."
-    run_test_case("4. Partial Overlap", doc1_4, doc2_4, 2)
+class TestPlagiarismDetector(unittest.TestCase):
 
-if __name__ == "__main__":
-    print("Running Plagiarism Detection Test Cases")
-    print("=" * 60)
-    run_all_tests()
-    print("\n" + "="*60)
+    def test_identical_documents(self):
+        print("\n Test Case 1: Identical Documents ")
+        doc1 = "The quick brown fox jumps over the lazy dog."
+        doc2 = "The quick brown fox jumps over the lazy dog."
+        result = detect_plagiarism(doc1, doc2)
+        print(f"Total Cost: {result['total_cost']}")
+        self.assertEqual(result['total_cost'], 0)
+        self.assertEqual(len(result['suspicious_pairs']), 1) # 1 sentence
+
+    def test_slightly_modified_document(self):
+        print("\n Test Case 2: Slightly Modified Document ")
+        doc1 = "The quick brown fox jumps over the lazy dog."
+        doc2 = "The fast brown fox leaps over the lazy dog."
+        result = detect_plagiarism(doc1, doc2)
+        print(f"Total Cost: {result['total_cost']}")
+        self.assertTrue(len(result['suspicious_pairs']) > 0)
+        self.assertTrue(result['total_cost'] > 0)
+
+    def test_completely_different_documents(self):
+        print("\n Test Case 3: Completely Different Documents ")
+        doc1 = "The quick brown fox jumps over the lazy dog."
+        doc2 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        result = detect_plagiarism(doc1, doc2)
+        print(f"Total Cost: {result['total_cost']}")
+        # Should be high cost, no suspicious pairs likely if threshold is tight
+        # The cost should be high.
+        self.assertTrue(result['total_cost'] > 10)
+
+    def test_partial_overlap(self):
+        print("\n Test Case 4: Partial Overlap ")
+        doc1 = "The quick brown fox jumps over the lazy dog. It is a sunny day."
+        doc2 = "It is a sunny day. The quick brown fox jumps over the lazy dog."        
+        result = detect_plagiarism(doc1, doc2)
+        print(f"Total Cost: {result['total_cost']}")
+        self.assertTrue(len(result['suspicious_pairs']) >= 1)
+
+if __name__ == '__main__':
+    unittest.main()
